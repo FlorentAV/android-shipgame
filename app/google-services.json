@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "797242050749",
+    "firebase_url": "https://shipgame-1b94b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "shipgame-1b94b",
+    "storage_bucket": "shipgame-1b94b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797242050749:android:2f4f4020d45fe2cfe64fd4",
+        "android_client_info": {
+          "package_name": "com.florent.shipgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMAN6Wk6-wfIVcFXZHKuercKOklnRrVNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
