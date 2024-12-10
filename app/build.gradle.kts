@@ -57,24 +57,29 @@ dependencies {
 
 
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
+    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.play.services.games.v2)
 
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
+    androidTestImplementation(libs.ui.test.junit4)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     implementation(libs.coil.compose)
 
-
+    implementation (libs.androidx.material.icons.extended)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
-    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation (libs.androidx.ui.test.junit4.v152)
+    debugImplementation (libs.ui.tooling)
+    debugImplementation (libs.ui.test.manifest)
 
-    implementation(libs.androidx.ui.v152)
+
     implementation(libs.androidx.runtime)
 
 
