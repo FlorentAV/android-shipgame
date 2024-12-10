@@ -13,17 +13,26 @@ composeBom = "2024.11.00"
 material3 = "1.4.0-alpha04"
 material3AdaptiveNavigationSuiteAndroid = "1.4.0-alpha04"
 compose-navigation = "2.8.4"
+materialIconsExtended = "1.7.5"
 runtime = "1.7.5"
 ui = "1.7.5"
+uiTestJunit4 = "<version>"
+uiTestJunit4Version = "1.5.2"
+uiTooling = "1.7.5"
 uiToolingPreview = "1.7.5"
 uiToolingPreviewVersion = "1.7.5"
 uiVersion = "1.7.5"
 firebase-bom = "33.6.0"
 firebase-database = "21.0.0"
 google-services = "4.4.2"
+uiTextGoogleFonts = "1.7.5"
+firebaseFirestoreKtx = "25.1.1"
+playServicesGamesV2 = "20.1.2"
 
 [libraries]
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
+androidx-ui-test-junit4-v152 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4Version" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebase-database" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
@@ -48,7 +57,13 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-material3-adaptive-navigation-suite-android = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite-android", version.ref = "material3AdaptiveNavigationSuiteAndroid" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestJunit4Version" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+play-services-games-v2 = { group = "com.google.android.gms", name = "play-services-games-v2", version.ref = "playServicesGamesV2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
