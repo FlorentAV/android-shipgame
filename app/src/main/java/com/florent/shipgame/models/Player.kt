@@ -3,7 +3,8 @@ package com.florent.shipgame.models
 
 
 data class Player(
+    val id: String,
     val name: String,
-    val board: GameBoard = GameBoard(),
-    var isReady: Boolean = false
+    val status: String = "offline"
 )
+
