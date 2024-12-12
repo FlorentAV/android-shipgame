@@ -1,6 +1,7 @@
 package com.florent.shipgame.ui.components
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,7 +50,7 @@ fun ShipPlacementScreen(
     val playerReady = remember { mutableStateOf(false) }
 
 
-    val savedPlacedShips = rememberSaveable(saver = shipSaver()) { mutableStateListOf<Ship>() }
+    val savedPlacedShips = rememberSaveable(saver = shipSaver()) { mutableStateListOf() }
     var currentShipSize by remember { mutableIntStateOf(4) }
     var isVertical by remember { mutableStateOf(true) }
     val placedShips = remember { savedPlacedShips }
@@ -66,18 +67,25 @@ fun ShipPlacementScreen(
 
     val gridSize = 10
 
+
+    BackHandler {
+
+    }
+
     Log.d("ShipPlacementScreen", "Shiplacnment launched")
     LaunchedEffect(gameId) {
         gameModel.observePlayerState(playerId) { playerStatus ->
             Log.d("ShipPlacementScreen", "Player status changed: $playerStatus")
             if (playerStatus == "ready") {
                 playerReady.value = true
+
             }
-            gameModel.observeGameState(gameId) { gameState ->
+            gameModel.observeGameState(gameId) { gameState -> // Navigate to gamescreen when state is in-game
                 if (gameState == "in-game" && !isDonePlacing) {
-                    isDonePlacing = true // Flag to prevent multiple navigation
+                    isDonePlacing = true
                     Log.d("ShipPlacementScreen", "Navigating to game screen")
                     navController.navigate("gameScreen/$gameId/$playerId")
+
 
 
                 }
@@ -258,6 +266,7 @@ fun ShipPlacementScreen(
                         }
                     },
                     enabled = allShipsPlaced
+
                 ) {
                     Text("Confirm")
                 }
