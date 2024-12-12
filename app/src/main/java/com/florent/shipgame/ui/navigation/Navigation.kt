@@ -52,6 +52,7 @@ fun Navigation(navController: NavHostController, gameModel: GameModel) {
             )
         }
 
+
         // Ship Placement Screen
         composable(
             "shipPlacementScreen/{gameId}/{playerId}",
@@ -70,6 +71,7 @@ fun Navigation(navController: NavHostController, gameModel: GameModel) {
             )
         }
 
+
         // Game Screen
         composable(
             "gameScreen/{gameId}/{playerId}",
@@ -83,16 +85,16 @@ fun Navigation(navController: NavHostController, gameModel: GameModel) {
             GameScreen(
                 navController = navController,
                 gameModel = gameModel,
-                gameId = gameId
+                gameId = gameId,
+                playerId = playerId
             )
         }
+
 
         // Result Screen
         composable(
             "resultScreen/{winnerMessage}",
-            arguments = listOf(
-                navArgument("winnerMessage") { type = NavType.StringType }
-            )
+            arguments = listOf(navArgument("winnerMessage") { type = NavType.StringType })
         ) { backStackEntry ->
             val winnerMessage = backStackEntry.arguments?.getString("winnerMessage") ?: "Game Over"
             ResultScreen(
