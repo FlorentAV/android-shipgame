@@ -12,5 +12,6 @@ data class Game(
     val player1Misses: MutableList<Coordinate> = mutableListOf(),
     val player2Misses: MutableList<Coordinate> = mutableListOf(),
     val gameState: String = "placing-ships",
-    val currentTurn: String = ""
+    val currentTurn: String = "",
+
 )
