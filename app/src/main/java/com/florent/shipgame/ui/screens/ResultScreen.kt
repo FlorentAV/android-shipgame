@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 
 
 
-// Result screen (small version, not done)
+// Result screen
 @Composable
 fun ResultScreen(
     winnerMessage: String,
@@ -31,11 +31,11 @@ fun ResultScreen(
     ) {
         Text(
             text = winnerMessage,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onBackToLobby) {
-            Text(text = "Return to Start")
+            Text("Back to Lobby")
         }
     }
 }
