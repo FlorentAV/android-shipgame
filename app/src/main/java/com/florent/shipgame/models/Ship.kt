@@ -1,7 +1,9 @@
 package com.florent.shipgame.models
 
 
+
+
 data class Ship(
-    val size: Int,
-    val positions: MutableList<Pair<Int, Int>> = mutableListOf()
+    val size: Int = 0,
+    val positions: MutableList<Coordinate> = mutableListOf()
 )
