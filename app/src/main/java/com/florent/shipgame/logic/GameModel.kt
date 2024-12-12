@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 // Game rules and misc.
 class GameModel : ViewModel() {
 
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
 
     // State flows for player and game
     val localPlayerId = MutableStateFlow<String?>(null)
@@ -129,12 +129,20 @@ class GameModel : ViewModel() {
     }
 
     // Observe Game State
-    fun observeGameState(gameId: String, onGameStateChange: (String) -> Unit) {
+    fun observeGameState(gameId: String, onGameStateChanged: (String) -> Unit) {
         db.collection("games").document(gameId)
             .addSnapshotListener { snapshot, error ->
-                if (error != null || snapshot == null) return@addSnapshotListener
-                val gameState = snapshot.getString("gameState")
-                if (gameState != null) onGameStateChange(gameState)
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    val gameState = snapshot.getString("gameState")
+
+                    if (gameState != null) {
+                        onGameStateChanged(gameState)
+                    }
+                }
             }
     }
 
@@ -262,7 +270,6 @@ class GameModel : ViewModel() {
     }
 
 
-
     // Your turn
     fun takeTurn(
         gameId: String,
@@ -272,24 +279,33 @@ class GameModel : ViewModel() {
     ) {
         val game = gameMap.value[gameId] ?: return onComplete("Game not found.")
 
-        // Get opponents ships and hits/misses based on the current player
+        // Check if the game is already over
+        if (game.gameState.endsWith("_won")) {
+            onComplete("Game is already over.")
+            return
+        }
+
         val opponentShips = if (playerId == game.player1Id) game.player2Ships else game.player1Ships
         val playerHits = if (playerId == game.player1Id) game.player1Hits.toMutableList() else game.player2Hits.toMutableList()
         val playerMisses = if (playerId == game.player1Id) game.player1Misses.toMutableList() else game.player2Misses.toMutableList()
 
+        // Prevent duplicate targeting
         if (playerHits.contains(target) || playerMisses.contains(target)) {
             onComplete("Position already targeted!")
             return
         }
 
-        val isHit = opponentShips.any { ship -> ship.positions.contains(target) }
-        if (isHit) {
+        // Determine if the target is a hit
+        val hitShip = opponentShips.find { ship -> ship.positions.contains(target) }
+
+        if (hitShip != null) {
             playerHits.add(target)
 
+            // Check if the hit ship is sunk
+            val isSunk = hitShip.positions.all { pos -> playerHits.contains(pos) }
 
+            // Update db with the hit
             updateLocalGameState(gameId, playerId, playerHits, isHit = true)
-
-            // Update hits to db and check wincon
             val updates = if (playerId == game.player1Id) {
                 mapOf("player1Hits" to playerHits.map { mapOf("x" to it.x, "y" to it.y) })
             } else {
@@ -297,11 +313,15 @@ class GameModel : ViewModel() {
             }
 
             db.collection("games").document(gameId).update(updates).addOnCompleteListener {
+
                 if (checkWinningCondition(opponentShips, playerHits)) {
-                    val winnerMessage = "${playerId} won!"
+                    // Update db to mark the game as won
                     db.collection("games").document(gameId).update("gameState", "${playerId}_won")
-                    updateLocalGameState(gameId, playerId, playerHits, isHit = true)
-                    onComplete(winnerMessage)
+                        .addOnCompleteListener {
+                            onComplete("Hit and sunk a ${hitShip.size}-cell ship! All ships sunk! ${playerId} wins!")
+                        }
+                } else if (isSunk) {
+                    onComplete("Hit and sunk a ${hitShip.size}-cell ship!")
                 } else {
                     onComplete("Hit!")
                 }
@@ -309,10 +329,7 @@ class GameModel : ViewModel() {
         } else {
             playerMisses.add(target)
 
-            // Update local state so you can see updated hits live
-            updateLocalGameState(gameId, playerId, playerMisses, isHit = false)
-
-            // Update misses to db
+            // Update db with the miss
             val updates = if (playerId == game.player1Id) {
                 mapOf("player1Misses" to playerMisses.map { mapOf("x" to it.x, "y" to it.y) })
             } else {
@@ -320,13 +337,13 @@ class GameModel : ViewModel() {
             }
 
             db.collection("games").document(gameId).update(updates).addOnCompleteListener {
+                // switch player turn
                 switchTurn(gameId) { success ->
                     if (success) onComplete("Miss!") else onComplete("Error switching turn.")
                 }
             }
         }
     }
-
 
     // update local gamestate when player makes its hit on a ship
     private fun updateLocalGameState(
