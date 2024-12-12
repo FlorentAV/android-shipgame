@@ -93,7 +93,11 @@ fun Navigation(navController: NavHostController, gameModel: GameModel) {
             val winnerMessage = backStackEntry.arguments?.getString("winnerMessage") ?: "Game Over"
             ResultScreen(
                 winnerMessage = winnerMessage,
-                onBackToLobby = { navController.navigate("startingScreen") }
+                onBackToLobby = {
+                    navController.navigate("startingScreen") {
+                        popUpTo(0)
+                    }
+                }
             )
         }
     }
