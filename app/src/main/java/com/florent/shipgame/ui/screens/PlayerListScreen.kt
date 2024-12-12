@@ -106,7 +106,16 @@ fun PlayerListScreen(
 
     // Popup for sending challenge (Waiting for response adding after)
     if (showChallengePopup) {
-        val senderName = players[incomingChallengeId]?.name ?: "Unknown Player"
+        var senderName by remember { mutableStateOf("Unknown Player") }
+
+        // Fetch the senderId and resolve the name
+        LaunchedEffect(incomingChallengeId) {
+            gameModel.fetchChallengeSender(incomingChallengeId) { fetchedSenderId ->
+                val fetchedName = gameModel.playerMap.value[fetchedSenderId]?.name
+                senderName = fetchedName ?: "Unknown Player"
+            }
+        }
+
         AlertDialog(
             onDismissRequest = { showChallengePopup = false },
             title = { Text("You've been challenged!") },
@@ -115,13 +124,18 @@ fun PlayerListScreen(
                 Button(onClick = {
                     gameModel.acceptChallenge(incomingChallengeId, playerId) { createdGameId ->
                         if (createdGameId != null) {
-                            gameId = createdGameId // Save the gameId
                             navController.navigate("shipPlacementScreen/$createdGameId/$playerId")
                         } else {
-                            Toast.makeText(context, "Failed to accept challenge.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Failed to accept challenge. Try again.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-                }) { Text("Accept") }
+                }) {
+                    Text("Accept")
+                }
             },
             dismissButton = {
                 Button(onClick = {
